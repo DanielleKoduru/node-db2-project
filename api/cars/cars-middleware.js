@@ -26,10 +26,10 @@ const checkCarPayload = async (req, res, next) => {
 
 const checkVinNumberValid = async (req, res, next) => {
   try {
-    let vinValid = await vinValidator.validate(req.body.vin)
+    const vinValid = await vinValidator.validate(req.body.vin)
     if (!vinValid) {
     return res.status(400).json({
-        message: `${req.body.vin} is invalid`
+        message: `vin ${req.body.vin} is invalid`
       })
     }
   } catch (err) {
@@ -39,8 +39,8 @@ const checkVinNumberValid = async (req, res, next) => {
 
 const checkVinNumberUnique = async (req, res, next) => {
   const car = await cars.getAll()
-  const checkVin = car.filter(car => car.vin === req.body.vin)
-  if(checkVin[0].vin === req.body.vin) {
+  const checkVin = car.map(car => car.vin)
+  if(checkVin.includes(req.body.vin)) {
     return res.status(400).json({
       message: "vin number is not unique"
     })

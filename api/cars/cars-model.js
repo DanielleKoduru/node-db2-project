@@ -13,11 +13,11 @@ const getById = (id) => {
     .select("*")
     .from("cars")
     .where("id", id)
-    .first(1) 
+    .first() 
 }
 
 // `create` resolves to the newly created car record
-const create = async car => {
+const create = async (car) => {
   const [id] = await db
     .insert({
       vin: car.vin,

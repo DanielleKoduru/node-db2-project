@@ -5,8 +5,8 @@ const { checkCarId, checkCarPayload, checkVinNumberValid, checkVinNumberUnique }
 // #1`[GET] /api/cars` returns an array of cars sorted by id (or an empty array if there aren't any).
 router.get('/', async (req, res, next) => {
     try {
-        const values = await cars.getAll()
-        res.status(200).json(values)
+        const allCars = await cars.getAll()
+        res.status(200).json(allCars)
     } catch (err) {
         next(err)
     }
@@ -15,8 +15,7 @@ router.get('/', async (req, res, next) => {
 //#2 `[GET] /api/cars/:id` returns a car by the given id.
 router.get('/', checkCarId, async (req, res, next) => {
     try {
-        const car = await cars.getById(req.params.id)
-        res.status(200).json(car)
+        res.status(200).json(req.car)
     } catch (err) {
         next(err)
     }
@@ -25,11 +24,17 @@ router.get('/', checkCarId, async (req, res, next) => {
 //3 `[POST] /api/cars` returns the created car. Leading or trailing whitespace on budget `name` should be trimmed before saving to db.
 router.post('/id', checkCarPayload, checkVinNumberValid, checkVinNumberUnique, async (req, res, next) => {
     try {
-        const newCar = await cars.create(req.params.id, req.body)
+        const newCar = await cars.create(req.body)
         res.status(201).json(newCar)
     } catch (err) {
         next(err)
     }
+})
+
+router.use((req, res ) => {
+    res.status(500).json({
+        message: "Oops! Something went wrong"
+    })
 })
 
 module.exports = router;
