@@ -13,12 +13,12 @@ const getById = (id) => {
     .select("*")
     .from("cars")
     .where("id", id)
-    .limit(1) //or .first() ??
+    .first(1) 
 }
 
 // `create` resolves to the newly created car record
-const create = async (id, car) => {
-  const newCar = await db
+const create = async car => {
+  const [id] = await db
     .insert({
       vin: car.vin,
       make: car.make,
@@ -28,6 +28,11 @@ const create = async (id, car) => {
       transmission: car.transmission
     })
     .into("cars")
+
+    const newCar = await db("cars")
+    .where("id", id)
+    .first()
+
   return newCar
 }
 
