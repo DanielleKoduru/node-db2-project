@@ -13,7 +13,7 @@ const getById = (id) => {
     .select("*")
     .from("cars")
     .where("id", id)
-    .first()
+    .limit(1) //or .first() ??
 }
 
 // `create` resolves to the newly created car record
