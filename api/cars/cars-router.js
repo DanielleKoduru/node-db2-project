@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 })
 
 //#2 `[GET] /api/cars/:id` returns a car by the given id.
-router.get('/', checkCarId, async (req, res, next) => {
+router.get('/:id', checkCarId, async (req, res, next) => {
     try {
         res.status(200).json(req.car)
     } catch (err) {
@@ -21,20 +21,14 @@ router.get('/', checkCarId, async (req, res, next) => {
     }
 })
 
-//3 `[POST] /api/cars` returns the created car. Leading or trailing whitespace on budget `name` should be trimmed before saving to db.
-router.post('/id', checkCarPayload, checkVinNumberValid, checkVinNumberUnique, async (req, res, next) => {
+//#3 `[POST] /api/cars` returns the created car. Leading or trailing whitespace on budget `name` should be trimmed before saving to db.
+router.post('/', checkCarPayload, checkVinNumberValid, checkVinNumberUnique, async (req, res, next) => {
     try {
-        const newCar = await cars.create(req.body)
+        const newCar = cars.create(req.body)
         res.status(201).json(newCar)
     } catch (err) {
         next(err)
     }
-})
-
-router.use((req, res ) => {
-    res.status(500).json({
-        message: "Oops! Something went wrong"
-    })
 })
 
 module.exports = router;
